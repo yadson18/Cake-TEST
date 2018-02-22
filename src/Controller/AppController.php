@@ -43,6 +43,26 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'authorize' => ['Controller'],
+            'loginRedirect' => [
+                'controller' => 'Colaborador',
+                'action' => 'index'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Colaborador',
+                'action' => 'login'
+            ],
+            'unauthorizedRedirect' => [
+                'controller' => 'Colaborador',
+                'action' => 'login'
+            ],
+            'unauthorizedRedirect' => [
+                'controller' => 'Colaborador',
+                'action' => 'login'
+            ],
+            'authError' => 'Você não tem permissão para acessar esta página.'
+        ]);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -50,5 +70,10 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
+    }
+
+    public function isAuthorized($user)
+    {
+        return false;
     }
 }

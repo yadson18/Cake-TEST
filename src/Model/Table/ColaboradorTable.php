@@ -7,6 +7,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 use Cake\Datasource\ConnectionManager;
+use Cake\ORM\TableRegistry;
 
 /**
  * Colaborador Model
@@ -35,6 +36,10 @@ class ColaboradorTable extends Table
         $this->setTable('colaborador');
         $this->setDisplayField('cod_colaborador');
         $this->setPrimaryKey('cod_colaborador');
+    }
+
+    public static function defaultConnectionName() {
+        return 'sricash2';
     }
 
     public function validarLogin(array $dados)

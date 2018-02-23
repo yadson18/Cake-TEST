@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 
 /**
  * Cadastro Controller
@@ -20,9 +21,17 @@ class CadastroController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'limit' => 100,
+            'order' => [
+                'Cadastro.razao' => 'asc',
+                'Cadastro.cod_cadastro' => 'asc'
+            ]
+        ];
         $cadastro = $this->paginate($this->Cadastro);
 
         $this->set(compact('cadastro'));
+        $this->set('title', 'Clientes cadastrados');
     }
 
     /**
@@ -39,6 +48,7 @@ class CadastroController extends AppController
         ]);
 
         $this->set('cadastro', $cadastro);
+        $this->set('title', 'Dados do cliente');
     }
 
     /**
@@ -103,5 +113,10 @@ class CadastroController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function isAuthorized($user)
+    {
+        return true;
     }
 }

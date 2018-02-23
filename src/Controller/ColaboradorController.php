@@ -136,6 +136,6 @@ class ColaboradorController extends AppController
 
     public function isAuthorized($user)
     {
-        return true;
+        return false;
     }
 }

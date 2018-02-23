@@ -38,7 +38,7 @@
 				</div>
 			</div>
 			<div class='copy'>
-				<strong><small>&copy; SRI Automação</small></strong>
+				<strong><i class='far fa-copyright'></i> SRI Automação</strong>
 			</div>
 		<?= $this->Form->end() ?>
 	</div>

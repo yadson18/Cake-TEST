@@ -35,6 +35,10 @@ class CadastroTable extends Table
         $this->setPrimaryKey('cod_cadastro');
     }
 
+    public static function defaultConnectionName() {
+        return 'sricash';
+    }
+
     /**
      * Default validation rules.
      *

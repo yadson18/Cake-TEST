@@ -27,8 +27,8 @@
         <?= $this->Html->script('jquery.min.js') ?>
         <?= $this->Html->script('bootstrap.min.js') ?>
 
-        <link rel='stylesheet/less' type='text/css' href='less/mixin.less'>
-        <link rel='stylesheet/less' type='text/css' href='less/styles.less'>
+        <link rel='stylesheet/less' type='text/css' href='/less/mixin.less'>
+        <link rel='stylesheet/less' type='text/css' href='/less/styles.less'>
         <?= $this->Html->script('less.min.js') ?>
 
         <?= $this->fetch('meta') ?>
@@ -52,11 +52,33 @@
                 <?php if ($title !== 'Entrar'): ?>
                     <div class='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
                         <ul class='nav navbar-nav'>
-                            <li><a href='#'>Link</a></li>
-                            <li><a href='#'>Link</a></li>
+                            <li>
+                                <a href='/cadastro/index'>
+                                    <i class='fas fa-users'></i> Clientes
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#'>
+                                    <i class='fas fa-file-alt'></i> Cadastrar Contrato
+                                </a>
+                            </li>
                         </ul>
                         <ul class='nav navbar-nav navbar-right'>
-                            <li><a href='/Colaborador/logout'>Sair</a></li>
+                            <li class='dropdown'>
+                                <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+                                    <i class='fas fa-user'></i> 
+                                    <?= $Auth->user('nome') ?> <span class='caret'></span>
+                                </a>
+                                <ul class='dropdown-menu'>
+                                    <li><a href='#'><i class='fas fa-key'></i> Modificar Senha</a></li>
+                                    <li><a href='#'><i class='fas fa-cogs'></i> Configurações</a></li>
+                                    <li>
+                                        <a href='/Colaborador/logout'>
+                                            <i class='fas fa-sign-out-alt'></i> Sair
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 <?php endif ?>

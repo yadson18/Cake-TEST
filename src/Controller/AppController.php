@@ -46,7 +46,7 @@ class AppController extends Controller
         $this->loadComponent('Auth', [
             'authorize' => ['Controller'],
             'loginRedirect' => [
-                'controller' => 'Colaborador',
+                'controller' => 'Cadastro',
                 'action' => 'index'
             ],
             'logoutRedirect' => [
@@ -57,11 +57,7 @@ class AppController extends Controller
                 'controller' => 'Colaborador',
                 'action' => 'login'
             ],
-            'unauthorizedRedirect' => [
-                'controller' => 'Colaborador',
-                'action' => 'login'
-            ],
-            'authError' => 'Você não tem permissão para acessar esta página.'
+            'authError' => false
         ]);
 
         /*
@@ -70,6 +66,10 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
+    }
+
+    public function beforeRender(Event $event) {
+        $this->set('Auth', $this->Auth);
     }
 
     public function isAuthorized($user)

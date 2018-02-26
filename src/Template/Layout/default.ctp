@@ -20,8 +20,10 @@
 
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <title>SRI Administração - <?= $title ?></title>
-
         <?= $this->Html->meta('icon') ?>
+
+        <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Montserrat'>
+
         <?= $this->Html->css('bootstrap.min.css') ?>
         <?= $this->Html->css('fontawesome-all.min.css') ?>
         <?= $this->Html->script('jquery.min.js') ?>

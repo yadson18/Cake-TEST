@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
 
 /**
@@ -80,19 +81,26 @@ class CadastroController extends AppController
      */
     public function edit($id = null)
     {
-        $cadastro = $this->Cadastro->get($id, [
-            'contain' => []
-        ]);
+        $cadastro = $this->Cadastro->get($id, ['contain' => []]);
+        $paises = TableRegistry::get('Codigopais')->listaPaises();
+        $estados = TableRegistry::get('Ibge')->listaEstados();
+        $municipios = TableRegistry::get('Ibge')->listaMunicipios($cadastro->estado);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
             if ($this->Cadastro->save($cadastro)) {
-                $this->Flash->success(__('The cadastro has been saved.'));
+                $this->Flash->success(
+                    __('Os dados do cliente (' . $cadastro->razao . ') foram modificados com sucesso.')
+                );
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The cadastro could not be saved. Please, try again.'));
+            $this->Flash->error(
+                __('Não foi possível modificar os dados do cliente (' . $cadastro->razao . ')')
+            );
         }
-        $this->set(compact('cadastro'));
+        $this->set(compact(['cadastro', 'paises', 'estados', 'municipios']));
+        $this->set('title', 'Modificar Cliente');
     }
 
     /**

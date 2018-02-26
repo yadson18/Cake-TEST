@@ -33,7 +33,7 @@
                 <?php foreach ($cadastro as $indice => $cadastro): ?>
                     <tr>
                         <th><?= $this->Number->format(++$indice) ?></th>
-                        <td class='hidden-xs'><?= $this->Number->format($cadastro->cod_cadastro) ?></td>
+                        <td class='hidden-xs'><?= h($cadastro->cod_cadastro) ?></td>
                         <td><?= h($cadastro->razao) ?></td>
                         <td class='hidden-xs'><?= h($cadastro->cnpj) ?></td>
                         <td class='hidden-xs'>

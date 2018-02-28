@@ -4,12 +4,12 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Codigopai Entity
+ * Codigopais Entity
  *
  * @property string $cpais
  * @property string $xpais
  */
-class Codigopai extends Entity
+class Codigopais extends Entity
 {
 
     /**

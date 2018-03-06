@@ -84,7 +84,7 @@
                             'label' => false
                         ]) 
                     ?>
-                    <i class='fas fa-search icon icon-sm col-icon button'></i>
+                    <i class='fas fa-search icon icon-sm col-icon button busca-endereco'></i>
                 </div>
                 <div class='form-group col-md-2 col-sm-3'>  
                     <?= $this->Form->control('estado', [

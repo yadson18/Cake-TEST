@@ -13,6 +13,12 @@ use App\Controller\AppController;
 class IbgeController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('RequestHandler');
+    }
+
     /**
      * Index method
      *
@@ -103,5 +109,23 @@ class IbgeController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function listaCidades($siglaEstado = null)
+    {
+        if (is_string($siglaEstado)) {
+            $cidades = $this->Ibge->listaMunicipios($siglaEstado);
+        }
+        else {
+            $cidades = ['error' => 'Desculpe, nenhuma cidade foi encontrada.'];    
+        }
+
+        $this->set(compact('cidades'));
+        $this->set('_serialize', ['cidades']);
+    }
+
+    public function isAuthorized($user)
+    {
+        return true;
     }
 }

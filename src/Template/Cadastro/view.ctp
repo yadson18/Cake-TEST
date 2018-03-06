@@ -6,7 +6,7 @@
 ?>
 <div id='cadastro-view' class='container-fluid'>
     <h2 class='page-header'>
-        <?= h('Dados do Cliente') ?>
+        <?= __('Dados do Cliente') ?>
         <a href=/cadastro/edit/<?= $cadastro->cod_cadastro ?> class='btn btn-primary'>
             <?= __('Editar') ?> <i class='fas fa-pencil-alt'></i>
         </a>

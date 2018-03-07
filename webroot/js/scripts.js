@@ -22,15 +22,64 @@ $(document).ready(function(){
         for ( var letra in mapaAcentosHex ) {
             palavraFormatada = palavraFormatada.replace(mapaAcentosHex[letra], letra);
         }
-
         return palavraFormatada;
     }
 
-    function listaCidades(siglaEstado, cidade) {
+    function limpaDadosCadastrais() {
+		$('input[name=fantasia]').val('');
+		$('input[name=nrend1]').val('');
+		$('input[name=razao]').val('');
+		$('input[name=cep]').val('');
+    }
+
+    function dadosCadastraisDesabilitado(status) {
+		$('input[name=fantasia]').prop('disabled', status);
+		$('input[name=nrend1]').prop('disabled', status);
+		$('input[name=razao]').prop('disabled', status);
+    	$('input[name=cep]').prop('disabled', status);
+    }
+
+    function buscaPessoaJuridica() {
+    	limpaDadosCadastrais();
+    	var $cnpj = $('input[name=cnpj]');
+
+        if ($cnpj.cleanVal().search(/^[0-9]{14}$/) !== -1) {
+        	dadosCadastraisDesabilitado(true);
+        	var $fantasia = $('input[name=fantasia]');
+        	var $numero = $('input[name=nrend1]');
+        	var $razao = $('input[name=razao]');
+        	var $cep = $('input[name=cep]');
+
+            $.ajax({
+                url: 'http://receitaws.com.br/v1/cnpj/' + $cnpj.cleanVal(),
+                crossDomain: true,
+                dataType: 'jsonp'
+            })
+            .always(function(dados, status) {
+            	if (status === 'success') {
+            		if (dados.status === 'OK') {
+		            	if (dados.situacao === 'ATIVA') {
+			            	$cep.val(dados.cep.replace(/[.]/g, '')).focusout();
+			            	$fantasia.val(dados.fantasia);
+			            	$numero.val(dados.numero);
+			            	$razao.val(dados.nome);
+		            	}
+            		}
+            	}
+            	dadosCadastraisDesabilitado(false);
+            });
+        }
+        else {
+            console.log('Por favor, digite um CNPJ válido');
+        }
+    }
+
+    function buscaCidadesPorSigla(siglaEstado, cidade) {
+    	cidade = (cidade) ? removeAcentuacao(cidade).toUpperCase() : '';
     	siglaEstado = siglaEstado.toUpperCase();
 
     	if (siglaEstado.search(/^[a-zA-Z]{2}$/) !== -1) {
-    		$cidade = $('select[name=cidade]').prop('disabled', true);
+    		var $cidade = $('select[name=cidade]').prop('disabled', true);
 
 		    $.ajax({
 		        url: '/ibge/listaCidades/' + siglaEstado,
@@ -62,21 +111,30 @@ $(document).ready(function(){
     	}
     }
 
-    /* Máscaras */
-    $('input[name=cep]').mask('00000-000', { reverse: true });
+    function limpaEndereco() {
+		$('input[name=complementar]').val('');
+		$('input[name=endereco]').val('');
+		$('input[name=bairro]').val('');
+    }
 
-    /* Eventos */
-    $('select[name=estado]').on('change', function() { listaCidades($(this).val()); });
+    function enderecoDesabilitado(status) {
+		$('input[name=complementar]').prop('disabled', status);
+    	$('select[name=estado]').prop('disabled', status);
+		$('input[name=endereco]').prop('disabled', status);
+		$('input[name=bairro]').prop('disabled', status);
+    }
 
-	$('.busca-endereco').on('click', function() {
-		var $cep = $('input[name=cep]');
-
+    function buscaPorCep() {
+        limpaEndereco();
+    	var $cep = $('input[name=cep]');
+    	
 		if ($cep.cleanVal().search(/^[0-9]{8}$/) !== -1) {
-			var $estado = $('select[name=estado]').prop('disabled', true);
-			var $cidade = $('select[name=cidade]').prop('disabled', true);
-			var $endereco = $('input[name=endereco]').prop('disabled', true);
-			var $bairro = $('input[name=bairro]').prop('disabled', true);
-			var $complemento = $('input[name=complementar]').prop('disabled', true);
+			enderecoDesabilitado(true);
+			var $estado = $('select[name=estado]').val('AC').change();
+			var $complemento = $('input[name=complementar]');
+			var $endereco = $('input[name=endereco]');
+			var $cidade = $('select[name=cidade]');
+			var $bairro = $('input[name=bairro]');
 
 			$.ajax({
 	            url: 'https://viacep.com.br/ws/' + $cep.cleanVal() + '/json/',
@@ -86,19 +144,11 @@ $(document).ready(function(){
 	        .always(function($dados, status) {
 	        	if (status === 'success') {
 	        		if (!$dados.erro) {
-	        			var cidadeNome = removeAcentuacao($dados.localidade).toUpperCase();
-
-	        			$estado.val($dados.uf.toUpperCase());
-	        			if ($cidade.filter(':contains(' + cidadeNome + ')').length === 0) {
-	        				listaCidades($dados.uf.toUpperCase(), cidadeNome);
-	        			}
-	        			else {
-	        				$cidade.val(cidadeNome);
-	        			}
+	        			buscaCidadesPorSigla($dados.uf, $dados.localidade);
+	        			$complemento.val($dados.complemento.toUpperCase());
 	        			$endereco.val($dados.logradouro.toUpperCase());
 	        			$bairro.val($dados.bairro.toUpperCase());
-	        			$complemento.val($dados.complemento.toUpperCase());
-
+	        			$estado.val($dados.uf.toUpperCase());
 	        		}
 	        		else {
 	        			alert('Cep inválido.');
@@ -107,16 +157,76 @@ $(document).ready(function(){
 	        	else {
 	        		alert('Não foi possível completar a operação, verifique sua conexão com a internet.');
 	        	}
-	        	
-	        	$estado.prop('disabled', false);
-    			$cidade.prop('disabled', false);
-    			$endereco.prop('disabled', false);
-    			$bairro.prop('disabled', false);
-    			$complemento.prop('disabled', false);
+	        	enderecoDesabilitado(false);
 	        });
 		}
 		else {
 			alert('O cep deve conter 8 dígitos.');
 		}
-	});
+    }
+
+    /* Máscaras */
+    var $maskConfigs = {
+    	translation: { '0': { pattern: /[0-9]/ } },
+    	clearIfNotMatch: true,
+        optional: false,
+        reverse: true
+    };
+
+    $('.cnpj').mask('00.000.000/0000-00', $maskConfigs);
+
+    $('.cpf').mask('000.000.000-00', $maskConfigs);
+
+    $('.cep').mask('00000-000', $maskConfigs);
+
+    $('.rg').mask('0.000.000', $maskConfigs);
+
+    /* Eventos */
+    $('#breadcrumb .tipo-cliente li').on('click', function() {
+    	var $inscEstadual = $('#insc-estadual input[name=estadual]');
+    	var $labelInscEstadual = $('#insc-estadual label');
+    	var tipoCliente = $(this).find('a').attr('class');
+    	var $divBotaoBusca = $('#busca-p-juridica');
+    	var $cnpj = $('#cpf-cnpj input[name=cnpj]');
+    	var $labelCliente = $('#cpf-cnpj label');
+    	
+
+    	$('#breadcrumb .tipo-cliente li').removeClass('active');
+    	$(this).addClass('active');
+
+    	if (tipoCliente === 'fisica') {
+    		$labelInscEstadual.text('N° Identidade');
+    		$divBotaoBusca.addClass('hidden');
+    		$labelCliente.text('CPF');
+    		$inscEstadual.attr({ 
+    			placeholder: 'EX: 9.557.033' 
+    		})
+    		.val('').mask('0.000.000', $maskConfigs);
+    		$cnpj.attr({ 
+    			placeholder: 'EX: 095.726.241-80' 
+    		})
+    		.val('').mask('000.000.000-00', $maskConfigs);
+    	}
+    	else {
+    		$inscEstadual.attr({ placeholder: 'EX: ISENTO' }).val('').unmask();
+    		$labelInscEstadual.text('Inscrição Estadual');
+    		$divBotaoBusca.removeClass('hidden');
+    		$labelCliente.text('CNPJ');
+    		$cnpj.attr({ 
+    			placeholder: 'EX: 53.965.649/0001-03' 
+    		})
+    		.val('').mask('00.000.000/0000-00', $maskConfigs);
+    	}
+    });
+
+    $('#busca-p-juridica i.button').on('click', buscaPessoaJuridica);
+
+    $('input[name=cep]').on('focusout', buscaPorCep);
+
+    $('.busca-endereco').on('click', buscaPorCep);
+
+    $('select[name=estado]').on('change', function() { 
+    	limpaEndereco();
+    	buscaCidadesPorSigla($(this).val()); 
+    });
 });

@@ -63,12 +63,6 @@ class CadastroTable extends Table
             ->notEmpty('razao');
 
         $validator
-            ->scalar('fantasia')
-            ->maxLength('fantasia', 40)
-            ->requirePresence('fantasia', 'create')
-            ->notEmpty('fantasia');
-
-        $validator
             ->scalar('cnpj')
             ->maxLength('cnpj', 20)
             ->requirePresence('cnpj', 'create')
@@ -324,12 +318,6 @@ class CadastroTable extends Table
             ->notEmpty('senhacred');
 
         $validator
-            ->scalar('nrend1')
-            ->maxLength('nrend1', 12)
-            ->requirePresence('nrend1', 'create')
-            ->notEmpty('nrend1');
-
-        $validator
             ->scalar('nrend2')
             ->maxLength('nrend2', 12)
             ->requirePresence('nrend2', 'create')
@@ -358,12 +346,6 @@ class CadastroTable extends Table
             ->maxLength('st_liminar', 1)
             ->requirePresence('st_liminar', 'create')
             ->notEmpty('st_liminar');
-
-        $validator
-            ->scalar('complementar')
-            ->maxLength('complementar', 40)
-            ->requirePresence('complementar', 'create')
-            ->notEmpty('complementar');
 
         $validator
             ->integer('tabela_preco')

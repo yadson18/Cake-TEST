@@ -14,38 +14,50 @@
                 <div class='form-group' id='breadcrumb'>
                     <ul class='nav nav-tabs tipo-cliente'>
                         <li class=<?= (strlen($cadastro->cnpj) === 11) ? 'active' : '' ?>>
-                            <a href='#' id='CPF'><?= __('Pessoa Física') ?></a>
+                            <a class='fisica'><?= __('Pessoa Física') ?></a>
                         </li>
                         <li class=<?= (strlen($cadastro->cnpj) === 14) ? 'active' : '' ?>>
-                            <a href='#' id='CNPJ'><?= __('Pessoa Jurídica') ?></a>
+                            <a class='juridica'><?= __('Pessoa Jurídica') ?></a>
                         </li>
                     </ul>
                 </div>
                 <div class='message-box'>
                     <?= $this->Flash->render() ?>
                 </div>
-                <div class='form-group icon-right col-sm-6'>
+                <div class='form-group icon-right col-sm-6' id='cpf-cnpj'>
                     <label>
                         <?= (strlen($cadastro->cnpj) === 14) ? __('CNPJ') : __('CPF') ?>
-                    </label>        
-                    <?= $this->Form->control('cnpj', [
-                            'placeholder' => (strlen($cadastro->cnpj) === 14) 
-                                ? 'EX: 53.965.649/0001-03' : 'EX: 095.726.241-80',
-                            'class' => 'form-control input-sm',
-                            'label' => false
+                    </label>  
+                    <?= $this->Form->control('cnpj', (strlen($cadastro->cnpj) === 14) ? [
+                            'placeholder' => 'EX: 53.965.649/0001-03',
+                            'class' => 'form-control input-sm cnpj',
+                            'label' => false,
+                            'error' => false
+                        ] : [
+                            'placeholder' => 'EX: 095.726.241-80',
+                            'class' => 'form-control input-sm cpf',
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
-                    <i class='fas fa-search icon icon-sm col-icon button'></i>
+                    <div id='busca-p-juridica' class=<?= (strlen($cadastro->cnpj) === 14) ? '' : 'hidden' ?>>
+                        <i class='fas fa-search icon icon-sm col-icon button'></i>
+                    </div>
                 </div>
-                <div class='form-group col-sm-6'>
+                <div class='form-group col-sm-6' id='insc-estadual'>
                     <label>
-                        <?= (strlen($cadastro->cnpj) === 14) ? __('Inscrição Estadual') : __('RG') ?>
+                        <?= (strlen($cadastro->cnpj) === 14) ? __('Inscrição Estadual') : __('N° Identidade') ?>
                     </label>        
-                    <?= $this->Form->control('estadual', [
-                            'placeholder' => (strlen($cadastro->cnpj) === 14) 
-                                ? 'EX: ISENTO' : 'EX: 9.557.033',
+                    <?= $this->Form->control('estadual', (strlen($cadastro->cnpj) === 14) ? [
                             'class' => 'form-control input-sm text-uppercase',
-                            'label' => false
+                            'placeholder' => 'EX: ISENTO',
+                            'label' => false,
+                            'error' => false
+                        ] : [
+                            'class' => 'form-control input-sm rg',
+                            'placeholder' => 'EX: 9.557.033',
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -54,7 +66,8 @@
                     <?= $this->Form->control('razao', [
                             'class' => 'form-control input-sm text-uppercase',
                             'placeholder' => 'EX: FRUTAS E VERDURAS QUITANDA',
-                            'label' => false
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -62,7 +75,9 @@
                     <?= $this->Form->control('fantasia', [
                             'class' => 'form-control input-sm text-uppercase',
                             'placeholder' => 'EX: FRUTAS E VERDURAS',
-                            'required' => false
+                            'required' => false,
+                            'maxlength' => 40,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -72,16 +87,18 @@
                             'options' => array_column($paises, 'xpais', 'cpais'),
                             'class' => 'form-control input-sm',
                             'type' => 'select',
-                            'label' => false
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
                 <div class='form-group col-md-3 col-sm-5 icon-right'>  
                     <label><?= __('CEP') ?></label>    
                     <?= $this->Form->control('cep', [
-                            'class' => 'form-control input-sm',
+                            'class' => 'form-control input-sm cep',
                             'placeholder' => 'EX: 50000-000',
-                            'label' => false
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                     <i class='fas fa-search icon icon-sm col-icon button busca-endereco'></i>
@@ -90,7 +107,8 @@
                     <?= $this->Form->control('estado', [
                             'options' => array_column($estados, 'sigla', 'sigla'),
                             'class' => 'form-control input-sm',
-                            'type' => 'select'
+                            'type' => 'select',
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -100,7 +118,8 @@
                                 $municipios, 'nome_municipio', 'nome_municipio'
                             ),
                             'class' => 'form-control input-sm',
-                            'type' => 'select'
+                            'type' => 'select',
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -109,7 +128,8 @@
                     <?= $this->Form->control('endereco', [
                             'class' => 'form-control input-sm text-uppercase',
                             'placeholder' => 'EX: RUA CARLOS AFONSO',
-                            'label' => false
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -118,15 +138,18 @@
                     <?= $this->Form->control('nrend1', [
                             'class' => 'form-control input-sm text-uppercase',
                             'placeholder' => 'EX: 225',
-                            'type' => 'number',
-                            'label' => false
+                            'required' => false,
+                            'maxlength' => 12,
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
                 <div class='form-group col-md-5 col-sm-8'>  
                     <?= $this->Form->control('bairro', [
                             'class' => 'form-control input-sm text-uppercase',
-                            'placeholder' => 'EX: CENTRO'
+                            'placeholder' => 'EX: CENTRO',
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -136,7 +159,9 @@
                             'class' => 'form-control input-sm text-uppercase',
                             'placeholder' => 'EX: EMPRESARIAL ROMA',
                             'required' => false,
-                            'label' => false
+                            'maxlength' => 40,
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>
@@ -150,7 +175,8 @@
                             ],
                             'class' => 'form-control input-sm',
                             'type' => 'select',
-                            'label' => false
+                            'label' => false,
+                            'error' => false
                         ]) 
                     ?>
                 </div>

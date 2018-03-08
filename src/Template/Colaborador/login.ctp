@@ -11,6 +11,7 @@
 					<?= $this->Form->control('nome', [
 							'placeholder' => 'Digite seu usuário',
 							'class' => 'form-control',
+							'autofocus' => true,
 							'required' => true,
 							'label' => false
 						]) 

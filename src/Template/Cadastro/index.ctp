@@ -60,15 +60,17 @@
             </tbody>
         </table>
     </div>
-    <div class='paginator'>
-        <ul class='pagination'>
-            <?= $this->Paginator->first(__('Início')) ?>
-            <?= $this->Paginator->prev(__('Anterior')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('Próximo')) ?>
-            <?= $this->Paginator->last(__('Fim')) ?>
-        </ul>
-        <p>
+    <div>
+        <div class='paginator pull-left'>
+            <ul class='pagination'>
+                <?= $this->Paginator->first(__('Início')) ?>
+                <?= $this->Paginator->prev(__('Anterior')) ?>
+                <?= $this->Paginator->numbers() ?>
+                <?= $this->Paginator->next(__('Próximo')) ?>
+                <?= $this->Paginator->last(__('Fim')) ?>
+            </ul>
+        </div>
+        <p class='pull-right quantity-paginator'>
             <?= $this->Paginator->counter(['format' => __(
                     "Página {{page}} de {{pages}}, mostrando {{current}} registro(s), do total de {{count}}"
                 )]) 

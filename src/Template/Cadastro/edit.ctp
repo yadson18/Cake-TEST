@@ -31,11 +31,13 @@
                     <?= $this->Form->control('cnpj', (strlen($cadastro->cnpj) === 14) ? [
                             'placeholder' => 'EX: 53.965.649/0001-03',
                             'class' => 'form-control input-sm cnpj',
+                            'autofocus' => true,
                             'label' => false,
                             'error' => false
                         ] : [
                             'placeholder' => 'EX: 095.726.241-80',
                             'class' => 'form-control input-sm cpf',
+                            'autofocus' => true,
                             'label' => false,
                             'error' => false
                         ]) 

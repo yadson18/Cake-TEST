@@ -33,10 +33,32 @@ class CadastroTable extends Table
         $this->setTable('cadastro');
         $this->setDisplayField('cod_cadastro');
         $this->setPrimaryKey('cod_cadastro');
+
+        $this->hasOne('Contrato', [
+            'foreignKey' => 'contratante'
+        ]);
     }
 
     public static function defaultConnectionName() {
         return 'sricash';
+    }
+
+    public function listaCadastrosAtivos()
+    {
+        return $this->find('all')->select([
+                //'Contrato.contratante',
+                'Cadastro.cod_cadastro', 'Cadastro.razao', 'Cadastro.cnpj',
+                'Cadastro.tipo', 'Cadastro.estado', 'Cadastro.cep', 'Cadastro.cidade',
+                'Cadastro.endereco', 'Cadastro.bairro'
+            ])
+            //->contain(['Contrato'])
+            ->where([
+                'Cadastro.ativo' => 'T',
+            ])
+            ->order([
+                'Cadastro.razao' => 'asc',
+                'Cadastro.cod_cadastro' => 'asc'
+            ]);
     }
 
     /**

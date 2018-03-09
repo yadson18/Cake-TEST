@@ -55,7 +55,7 @@ $(document).ready(function(){
                 crossDomain: true,
                 dataType: 'jsonp'
             })
-            .always(function(dados, status) {
+            .always(function(dados, status) { 
             	if (status === 'success') {
             		if (dados.status === 'OK') {
 		            	if (dados.situacao === 'ATIVA') {
@@ -64,8 +64,17 @@ $(document).ready(function(){
 			            	$numero.val(dados.numero);
 			            	$razao.val(dados.nome);
 		            	}
+                        else {
+                            console.log('O cadastro referente a este CNPJ conta como inativo');
+                        }
             		}
+                    else {
+                        console.log('Nada foi encontrato.');
+                    }
             	}
+                else {
+                    console.log('Verifique sua conexão com a internet.');
+                }
             	dadosCadastraisDesabilitado(false);
             });
         }
@@ -228,5 +237,19 @@ $(document).ready(function(){
     $('select[name=estado]').on('change', function() { 
     	limpaEndereco();
     	buscaCidadesPorSigla($(this).val()); 
+    });
+
+    $('#delete').on('show.bs.modal', function(evento) {
+        var $botaoConfirmar = $(this).find('button.confirm');
+        var $formulario = $(this).find('form');
+        var identificador = $(evento.relatedTarget).val();
+        var url = $formulario.attr('action');
+
+        $botaoConfirmar.on('click', function() {
+            $formulario.attr({ 'action': url + '/' + identificador }).submit();
+        });
+    })
+    .on('hidden.bs.modal', function(evento) {
+        $(this).find('button.confirm').off('click');
     });
 });

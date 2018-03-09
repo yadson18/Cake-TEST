@@ -22,14 +22,8 @@ class CadastroController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'limit' => 100,
-            'order' => [
-                'Cadastro.razao' => 'asc',
-                'Cadastro.cod_cadastro' => 'asc'
-            ]
-        ];
-        $cadastro = $this->paginate($this->Cadastro);
+        $this->paginate = ['limit' => 100];
+        $cadastro = $this->paginate($this->Cadastro->listaCadastrosAtivos());
 
         $this->set(compact('cadastro'));
         $this->set('title', 'Clientes cadastrados');
@@ -90,13 +84,13 @@ class CadastroController extends AppController
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
             if ($this->Cadastro->save($cadastro)) {
                 $this->Flash->success(
-                    __('Os dados do cliente (' . $cadastro->razao . ') foram modificados com sucesso.')
+                    __('Os dados de (' . $cadastro->razao . ') foram modificados com sucesso.')
                 );
 
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(
-                __('Não foi possível modificar os dados do cliente (' . $cadastro->razao . ')')
+                __('Não foi possível modificar os dados de (' . $cadastro->razao . ')')
             );
         }
         $this->set(compact(['cadastro', 'paises', 'estados', 'municipios']));
@@ -114,10 +108,12 @@ class CadastroController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $cadastro = $this->Cadastro->get($id);
-        if ($this->Cadastro->delete($cadastro)) {
-            $this->Flash->success(__('The cadastro has been deleted.'));
+        $cadastro->ativo = 'F';
+
+        if ($this->Cadastro->save($cadastro)) {
+            $this->Flash->success(__('(' . $cadastro->razao . ') foi removido com sucesso.'));
         } else {
-            $this->Flash->error(__('The cadastro could not be deleted. Please, try again.'));
+            $this->Flash->error(__('Não foi possível remover (' . $cadastro->razao . ').'));
         }
 
         return $this->redirect(['action' => 'index']);

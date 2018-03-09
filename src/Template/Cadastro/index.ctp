@@ -87,29 +87,23 @@
                             <?= __('Deseja realmente apagar este?') ?>
                         </h4>
                     </div>
-                    <div class='modal-body'>
-                        
-                    </div>
                     <div class='modal-footer'>
-                        <button type='button' class='btn btn-danger' data-dismiss='modal'>
-                            <?= __('Fechar') ?>
-                        </button>
-                        <button type='button' class='btn btn-success'>
-                            <?= __('Confirmar') ?>
-                        </button>
+                        <?= $this->Form->create('', [
+                                'url' => ['action' => 'delete'],
+                                'class' => 'form-content',
+                                'method' => 'POST'
+                            ]) 
+                        ?>
+                            <button type='button' class='btn btn-danger' data-dismiss='modal'>
+                                <?= __('Fechar') ?> <i class='fas fa-times'></i>
+                            </button>
+                            <button type='button' class='btn btn-success confirm'>
+                                <?= __('Confirmar') ?> <i class='fas fa-check'></i>
+                            </button>
+                        <?= $this->Form->end() ?>
                     </div>
                 </div>
             </div>
         </div>
-        <script type='text/javascript'>
-            /*$('#delete.modal').on('show.bs.modal', function(evento) {
-                $(this).find('form').attr({ 
-                    action: '/cadastro/delete/' + $(evento.relatedTarget).val() 
-                });
-            })
-            .on('hidden.bs.modal', function(evento) {
-                $(this).find('button.confirm').off('click');
-            });*/
-        </script>
     <!-- Modal End -->
 </div>

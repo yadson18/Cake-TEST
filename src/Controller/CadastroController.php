@@ -43,7 +43,7 @@ class CadastroController extends AppController
         ]);
 
         $this->set('cadastro', $cadastro);
-        $this->set('title', 'Dados do cliente');
+        $this->set('title', 'Dados do cadastro');
     }
 
     /**
@@ -53,18 +53,30 @@ class CadastroController extends AppController
      */
     public function add()
     {
+        $municipios = TableRegistry::get('Ibge')->listaMunicipios('AC');
+        $paises = TableRegistry::get('Codigopais')->listaPaises();
+        $estados = TableRegistry::get('Ibge')->listaEstados();
         $cadastro = $this->Cadastro->newEntity();
+
         if ($this->request->is('post')) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
+            $cadastro->cadastrado_por = $this->Auth->user('cod_colaborador');
+            $cadastro->cadastrado_em = date('d.m.Y');
+            $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
+            $cadastro->alterado_em = date('d.m.Y');
+            $cadastro->ativo = 'T';
+
             if ($this->Cadastro->save($cadastro)) {
-                $this->Flash->success(__('The cadastro has been saved.'));
+                $this->Flash->success(
+                    __('Os dados de (' . $cadastro->razao . ') foram cadastrados com sucesso.')
+                );
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The cadastro could not be saved. Please, try again.'));
+            $this->Flash->error( __('Não foi possível cadastrar os dados de (' . $cadastro->razao . ').'));
         }
-        $this->set(compact('cadastro'));
-    }
+        $this->set(compact(['cadastro', 'paises', 'estados', 'municipios']));
+        $this->set('title', 'Novo cadastro');    }
 
     /**
      * Edit method
@@ -82,6 +94,9 @@ class CadastroController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
+            $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
+            $cadastro->alterado_em = date('d.m.Y');
+
             if ($this->Cadastro->save($cadastro)) {
                 $this->Flash->success(
                     __('Os dados de (' . $cadastro->razao . ') foram modificados com sucesso.')
@@ -94,7 +109,7 @@ class CadastroController extends AppController
             );
         }
         $this->set(compact(['cadastro', 'paises', 'estados', 'municipios']));
-        $this->set('title', 'Modificar Cliente');
+        $this->set('title', 'Modificar cadastro');
     }
 
     /**
@@ -108,6 +123,8 @@ class CadastroController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $cadastro = $this->Cadastro->get($id);
+        $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
+        $cadastro->alterado_em = date('d.m.Y');
         $cadastro->ativo = 'F';
 
         if ($this->Cadastro->save($cadastro)) {

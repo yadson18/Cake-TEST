@@ -4,86 +4,180 @@
  * @var \App\Model\Entity\Cadastro $cadastro
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Cadastro'), ['action' => 'index']) ?></li>
-    </ul>
-</nav>
-<div class="cadastro form large-9 medium-8 columns content">
-    <?= $this->Form->create($cadastro) ?>
-    <fieldset>
-        <legend><?= __('Add Cadastro') ?></legend>
-        <?php
-            echo $this->Form->control('empresa');
-            echo $this->Form->control('razao');
-            echo $this->Form->control('fantasia');
-            echo $this->Form->control('cnpj');
-            echo $this->Form->control('tipo');
-            echo $this->Form->control('estadual');
-            echo $this->Form->control('municipal');
-            echo $this->Form->control('cae');
-            echo $this->Form->control('endereco');
-            echo $this->Form->control('bairro');
-            echo $this->Form->control('cep');
-            echo $this->Form->control('cidade');
-            echo $this->Form->control('estado');
-            echo $this->Form->control('telefone');
-            echo $this->Form->control('fax');
-            echo $this->Form->control('celular');
-            echo $this->Form->control('contato');
-            echo $this->Form->control('endcob');
-            echo $this->Form->control('bairrocob');
-            echo $this->Form->control('cepcob');
-            echo $this->Form->control('cidadecob');
-            echo $this->Form->control('estadocob');
-            echo $this->Form->control('obs');
-            echo $this->Form->control('atividade');
-            echo $this->Form->control('correspondencia');
-            echo $this->Form->control('tributacao');
-            echo $this->Form->control('comissao');
-            echo $this->Form->control('vendedor');
-            echo $this->Form->control('registro');
-            echo $this->Form->control('deslocamento');
-            echo $this->Form->control('ativo');
-            echo $this->Form->control('multdistancia');
-            echo $this->Form->control('multatividade');
-            echo $this->Form->control('cadastrado_por');
-            echo $this->Form->control('cadastrado_em');
-            echo $this->Form->control('alterado_por');
-            echo $this->Form->control('alterado_em');
-            echo $this->Form->control('area');
-            echo $this->Form->control('limite');
-            echo $this->Form->control('ultimo_venc');
-            echo $this->Form->control('atual_venc');
-            echo $this->Form->control('prazo');
-            echo $this->Form->control('tipo_fatura');
-            echo $this->Form->control('datanasc');
-            echo $this->Form->control('dia_fatuta');
-            echo $this->Form->control('venc_cartao');
-            echo $this->Form->control('cartao_proprio');
-            echo $this->Form->control('senhacred');
-            echo $this->Form->control('nrend1');
-            echo $this->Form->control('nrend2');
-            echo $this->Form->control('e_mail');
-            echo $this->Form->control('cod_reg_trib');
-            echo $this->Form->control('tipocad');
-            echo $this->Form->control('st_liminar');
-            echo $this->Form->control('complementar');
-            echo $this->Form->control('tabela_preco');
-            echo $this->Form->control('id_convenio');
-            echo $this->Form->control('nr_convenio');
-            echo $this->Form->control('cod_ctardz');
-            echo $this->Form->control('dia_corte');
-            echo $this->Form->control('dia_vencimento');
-            echo $this->Form->control('protestar');
-            echo $this->Form->control('dias_protestar');
-            echo $this->Form->control('cpais');
-            echo $this->Form->control('trilha1');
-            echo $this->Form->control('trilha2');
-            echo $this->Form->control('trilha3');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+<div id='cadastro-add' class='col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1'>
+    <?= $this->Form->create($cadastro, ['class' => 'form-content']) ?>
+        <div class='form-header text-center'>
+            <h4><?= __('Novo Cadastro') ?></h4>
+        </div>
+        <div class='form-body'>
+            <div class='form-group' id='breadcrumb'>
+                <ul class='nav nav-tabs tipo-cliente'>
+                    <li class='active'>
+                        <a class='fisica'><?= __('Pessoa Física') ?></a>
+                    </li>
+                    <li>
+                        <a class='juridica'><?= __('Pessoa Jurídica') ?></a>
+                    </li>
+                </ul>
+            </div>
+            <div class='message-box'>
+                <?= $this->Flash->render() ?>
+            </div>
+            <div class='form-group icon-right col-sm-6' id='cpf-cnpj'>
+                <label><?= __('CPF') ?></label>  
+                <?= $this->Form->control('cnpj', [
+                        'placeholder' => 'EX: 095.726.241-80',
+                        'class' => 'form-control input-sm cpf',
+                        'autofocus' => true,
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+                <div id='busca-p-juridica' class='hidden'>
+                    <i class='fas fa-search icon icon-sm col-icon button'></i>
+                </div>
+            </div>
+            <div class='form-group col-sm-6' id='insc-estadual'>
+                <label><?= __('N° Identidade') ?></label>        
+                <?= $this->Form->control('estadual', [
+                        'class' => 'form-control input-sm rg',
+                        'placeholder' => 'EX: 9.557.033',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-sm-6'>
+                <label><?= __('Razão Social') ?></label>        
+                <?= $this->Form->control('razao', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: FRUTAS E VERDURAS QUITANDA',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-sm-6'>      
+                <?= $this->Form->control('fantasia', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: FRUTAS E VERDURAS',
+                        'required' => false,
+                        'maxlength' => 40,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-3 col-sm-4'>  
+                <label><?= __('País') ?></label>    
+                <?= $this->Form->control('cpais', [
+                        'options' => array_column($paises, 'xpais', 'cpais'),
+                        'class' => 'form-control input-sm',
+                        'type' => 'select',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-3 col-sm-5 icon-right'>  
+                <label><?= __('CEP') ?></label>    
+                <?= $this->Form->control('cep', [
+                        'class' => 'form-control input-sm cep',
+                        'placeholder' => 'EX: 50000-000',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+                <i class='fas fa-search icon icon-sm col-icon button busca-endereco'></i>
+            </div>
+            <div class='form-group col-md-2 col-sm-3'>  
+                <?= $this->Form->control('estado', [
+                        'options' => array_column($estados, 'sigla', 'sigla'),
+                        'class' => 'form-control input-sm',
+                        'type' => 'select',
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-4 col-sm-5'>  
+                <?= $this->Form->control('cidade', [
+                        'options' => array_column(
+                            $municipios, 'nome_municipio', 'nome_municipio'
+                        ),
+                        'class' => 'form-control input-sm',
+                        'type' => 'select',
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-5 col-sm-7'> 
+                <label><?= __('Endereço') ?></label>     
+                <?= $this->Form->control('endereco', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: RUA CARLOS AFONSO',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-2 col-sm-4'>     
+                <label><?= __('Número') ?></label> 
+                <?= $this->Form->control('nrend1', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: 225',
+                        'required' => false,
+                        'maxlength' => 12,
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-5 col-sm-8'>  
+                <?= $this->Form->control('bairro', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: CENTRO',
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-5 col-sm-6'> 
+                <label><?= __('Complemento') ?></label> 
+                <?= $this->Form->control('complementar', [
+                        'class' => 'form-control input-sm text-uppercase',
+                        'placeholder' => 'EX: EMPRESARIAL ROMA',
+                        'required' => false,
+                        'maxlength' => 40,
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+            <div class='form-group col-md-7 col-sm-6'>  
+                <label><?= __('Regime Tributário') ?></label>    
+                <?= $this->Form->control('cod_reg_trib', [
+                        'options' => [
+                            1 => 'SIMPLES NACIONAL',
+                            2 => 'SIMPLES NACIONAL - EXCESSO DE SUBLIMITE DA RECEITA BRUTA',
+                            3 => 'REGIME NORMAL'
+                        ],
+                        'class' => 'form-control input-sm',
+                        'type' => 'select',
+                        'label' => false,
+                        'error' => false
+                    ]) 
+                ?>
+            </div>
+        </div>
+        <div class='form-footer'>
+            <div class='col-sm-5'>
+                <a href='/cadastro/index' class='btn btn-primary btn-block'>
+                    <i class='fas fa-angle-double-left'></i> <?= __('Retornar') ?>
+                </a>
+            </div>
+            <div class='col-sm-7'>
+                <button class='btn btn-success btn-block'>
+                    <?= __('Salvar') ?> <i class='fas fa-save'></i>
+                </button>
+            </div>
+        </div>
     <?= $this->Form->end() ?>
 </div>

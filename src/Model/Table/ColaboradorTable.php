@@ -46,7 +46,7 @@ class ColaboradorTable extends Table
     {
         if (isset($dados['nome']) && isset($dados['senha'])) {
             return $this->find()
-                ->select(['cod_cadastro', 'nome', 'senha'])
+                ->select(['cod_cadastro', 'cod_colaborador', 'nome', 'senha'])
                 ->where([
                     'nome' => $dados['nome'], 
                     'senha' => $dados['senha']

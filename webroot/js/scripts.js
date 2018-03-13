@@ -25,6 +25,10 @@ $(document).ready(function(){
         return palavraFormatada;
     }
 
+    function formularioLetrasMaiusculas() {
+        $(this).val($(this).val().toUpperCase());
+    }
+
     function limpaDadosCadastrais() {
 		$('input[name=fantasia]').val('');
 		$('input[name=nrend1]').val('');
@@ -238,6 +242,8 @@ $(document).ready(function(){
     	limpaEndereco();
     	buscaCidadesPorSigla($(this).val()); 
     });
+
+    $('form.form-uppercase input').on('change', formularioLetrasMaiusculas);
 
     $('#delete').on('show.bs.modal', function(evento) {
         var $botaoConfirmar = $(this).find('button.confirm');

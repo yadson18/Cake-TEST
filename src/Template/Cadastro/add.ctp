@@ -5,7 +5,7 @@
  */
 ?>
 <div id='cadastro-add' class='col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1'>
-    <?= $this->Form->create($cadastro, ['class' => 'form-content']) ?>
+    <?= $this->Form->create($cadastro, ['class' => 'form-content form-uppercase']) ?>
         <div class='form-header text-center'>
             <h4><?= __('Novo Cadastro') ?></h4>
         </div>
@@ -40,7 +40,7 @@
             <div class='form-group col-sm-6' id='insc-estadual'>
                 <label><?= __('N° Identidade') ?></label>        
                 <?= $this->Form->control('estadual', [
-                        'class' => 'form-control input-sm rg',
+                        'class' => 'form-control input-sm text-uppercase rg',
                         'placeholder' => 'EX: 9.557.033',
                         'label' => false,
                         'error' => false

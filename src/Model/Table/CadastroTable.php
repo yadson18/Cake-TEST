@@ -43,6 +43,22 @@ class CadastroTable extends Table
         return 'sricash';
     }
 
+    public function sanitizarDados($cadastro)
+    {
+        $cadastro->complementar = sanitize($cadastro->complementar);
+        $cadastro->fantasia = sanitize($cadastro->fantasia);
+        $cadastro->estadual = sanitize($cadastro->estadual);
+        $cadastro->endereco = sanitize($cadastro->endereco);
+        $cadastro->bairro = sanitize($cadastro->bairro);
+        $cadastro->cidade = sanitize($cadastro->cidade);
+        $cadastro->nrend1 = sanitize($cadastro->nrend1);
+        $cadastro->razao = sanitize($cadastro->razao);
+        $cadastro->cnpj = sanitize($cadastro->cnpj);
+        $cadastro->cep = sanitize($cadastro->cep);
+
+        return $cadastro;
+    }
+
     public function listaCadastrosAtivos()
     {
         return $this->find('all')->select([

@@ -20,6 +20,8 @@ use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 
+require_once 'functions.php';
+
 /**
  * Application setup class.
  *

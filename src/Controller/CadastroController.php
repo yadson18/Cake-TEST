@@ -60,9 +60,10 @@ class CadastroController extends AppController
 
         if ($this->request->is('post')) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
+            $cadastro = $this->Cadastro->sanitizarDados($cadastro);
             $cadastro->cadastrado_por = $this->Auth->user('cod_colaborador');
-            $cadastro->cadastrado_em = date('d.m.Y');
             $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
+            $cadastro->cadastrado_em = date('d.m.Y');
             $cadastro->alterado_em = date('d.m.Y');
             $cadastro->ativo = 'T';
 
@@ -94,6 +95,7 @@ class CadastroController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
+            $cadastro = $this->Cadastro->sanitizarDados($cadastro);
             $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
             $cadastro->alterado_em = date('d.m.Y');
 

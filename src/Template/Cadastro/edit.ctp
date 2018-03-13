@@ -6,7 +6,7 @@
 ?>
 <div id='cadastro-edit' class='col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1'>
     <?php if(!empty($cadastro)): ?>
-        <?= $this->Form->create($cadastro, ['class' => 'form-content']) ?>
+        <?= $this->Form->create($cadastro, ['class' => 'form-content form-uppercase']) ?>
             <div class='form-header text-center'>
                 <h4><?= __('Modificar Cliente') ?></h4>
             </div>

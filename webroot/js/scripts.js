@@ -57,9 +57,13 @@ $(document).ready(function(){
             $.ajax({
                 url: 'http://receitaws.com.br/v1/cnpj/' + $cnpj.cleanVal(),
                 crossDomain: true,
-                dataType: 'jsonp'
+                dataType: 'jsonp',
+                timeout: 3000
             })
             .always(function(dados, status) { 
+                console.log(dados);
+                console.log(status);
+
             	if (status === 'success') {
             		if (dados.status === 'OK') {
 		            	if (dados.situacao === 'ATIVA') {
@@ -69,21 +73,24 @@ $(document).ready(function(){
 			            	$razao.val(dados.nome);
 		            	}
                         else {
-                            console.log('O cadastro referente a este CNPJ conta como inativo');
+                            alert('O cadastro referente a este CNPJ consta como inativo');
                         }
             		}
                     else {
-                        console.log('Nada foi encontrato.');
+                        alert('Nenhum cadastro referente ao CNPJ foi encontrato.');
                     }
             	}
+                else if (status === 'timeout') {
+                    alert('Erro, a requisição excedeu o tempo limite.');
+                }
                 else {
-                    console.log('Verifique sua conexão com a internet.');
+                    alert('Verifique sua conexão com a internet.');
                 }
             	dadosCadastraisDesabilitado(false);
             });
         }
         else {
-            console.log('Por favor, digite um CNPJ válido');
+            alert('Por favor, digite um CNPJ válido');
         }
     }
 
@@ -167,6 +174,9 @@ $(document).ready(function(){
 	        			alert('Cep inválido.');
 	        		}
 	        	}
+                else if (status === 'timeout') {
+                    alert('Erro, a requisição excedeu o tempo limite.');
+                }
 	        	else {
 	        		alert('Não foi possível completar a operação, verifique sua conexão com a internet.');
 	        	}

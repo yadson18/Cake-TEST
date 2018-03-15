@@ -93,12 +93,14 @@ class CadastroController extends AppController
         $estados = TableRegistry::get('Ibge')->listaEstados();
         $municipios = TableRegistry::get('Ibge')->listaMunicipios($cadastro->estado);
 
+        //$this->Cadastro->cadastroParaJSON($id);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
             $cadastro = $this->Cadastro->sanitizarDados($cadastro);
             $cadastro->alterado_por = $this->Auth->user('cod_colaborador');
             $cadastro->alterado_em = date('d.m.Y');
-
+            
             if ($this->Cadastro->save($cadastro)) {
                 $this->Flash->success(
                     __('Os dados de (' . $cadastro->razao . ') foram modificados com sucesso.')

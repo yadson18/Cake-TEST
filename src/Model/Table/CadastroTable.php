@@ -59,6 +59,69 @@ class CadastroTable extends Table
         return $cadastro;
     }
 
+
+    public function cadastroParaJSON(int $cod_cadastro)
+    {
+        $cadastro = $this->find()->select([
+                'cod_cadastro', 'razao', 'fantasia', 'cnpj', 'estadual', 'municipal',
+                'cae', 'endereco', 'bairro', 'cep', 'cidade', 'estado', 'telefone',
+                'celular', 'contato', 'cod_reg_trib'
+            ])
+            ->where(['cod_cadastro' => $cod_cadastro]);
+        
+        debug($cadastro);
+
+        /*$cadastro = $this->sanitizarDados($cadastro);
+
+        $cadastroJSON = [
+            'COD_CADASTRO' => $cadastro->cod_cadastro,
+            'RAZAO' => $cadastro->razao,
+            'FANTASIA' => $cadastro->fantasia,
+            'CNPJ' => $cadastro->cnpj,
+            'ESTADUAL' => $cadastro->estadual,
+            'MUNICIPAL' => sanitize($cadastro->municipal),
+            'CAE' => sanitize($cadastro->cae),
+            'ENDERECO' => $cadastro->endereco,
+            'BAIRRO' => $cadastro->bairro,
+            'CEP' => $cadastro->cep,
+            'CIDADE' => $cadastro->cidade,
+            'ESTADO' => $cadastro->estado,
+            'TELEFONE' => sanitize($cadastro->telefone),
+            'CELULAR' => sanitize($cadastro->celular),
+            'CONTATO' => sanitize($cadastro->contato),
+            'COD_REG_TRIB' => (int) $cadastro->cod_reg_trib
+        ];
+
+        return json_encode($cadastroJSON, true);*/
+    }
+
+    public function criaAmbiente(int $cod_cadastro) {
+        $url = 'http://sriservicos.com.br/integrasri/IntegraSRI.dll/wsdl/ISRI';
+        $config = [
+            'cache_wsdl' => 'WSDL_CACHE_NONE',
+            'soap_version' => 'SOAP_1_2',
+            'exceptions' => true,
+            'trace' => 1,
+            'stream_context' => stream_context_create([
+                'ssl' => [
+                    'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+                    'verify_peer_name' => false,
+                    'verify_peer' => false
+                ]
+            ])
+        ];
+        $webservice = new \SoapClient($url, $config);
+
+        if (is_callable([$webservice, 'criaAmbiente'])) {
+            $cadastro = $this->cadastroParaJSON($cod_cadastro);
+            $resposta = $webservice->criaAmbiente($cadastro);
+            if ($resposta['return'] === 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function listaCadastrosAtivos()
     {
         return $this->find('all')->select([

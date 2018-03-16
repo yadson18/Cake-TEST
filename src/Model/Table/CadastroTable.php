@@ -59,43 +59,30 @@ class CadastroTable extends Table
         return $cadastro;
     }
 
-
-    public function cadastroParaJSON(int $cod_cadastro)
+    protected function cadastroJSON(string $cnpj)
     {
         $cadastro = $this->find()->select([
                 'cod_cadastro', 'razao', 'fantasia', 'cnpj', 'estadual', 'municipal',
                 'cae', 'endereco', 'bairro', 'cep', 'cidade', 'estado', 'telefone',
                 'celular', 'contato', 'cod_reg_trib'
             ])
-            ->where(['cod_cadastro' => $cod_cadastro]);
-        
-        debug($cadastro);
+            ->where(['cnpj' => sanitize($cnpj)])
+            ->first()
+            ->toArray();
 
-        /*$cadastro = $this->sanitizarDados($cadastro);
-
-        $cadastroJSON = [
-            'COD_CADASTRO' => $cadastro->cod_cadastro,
-            'RAZAO' => $cadastro->razao,
-            'FANTASIA' => $cadastro->fantasia,
-            'CNPJ' => $cadastro->cnpj,
-            'ESTADUAL' => $cadastro->estadual,
-            'MUNICIPAL' => sanitize($cadastro->municipal),
-            'CAE' => sanitize($cadastro->cae),
-            'ENDERECO' => $cadastro->endereco,
-            'BAIRRO' => $cadastro->bairro,
-            'CEP' => $cadastro->cep,
-            'CIDADE' => $cadastro->cidade,
-            'ESTADO' => $cadastro->estado,
-            'TELEFONE' => sanitize($cadastro->telefone),
-            'CELULAR' => sanitize($cadastro->celular),
-            'CONTATO' => sanitize($cadastro->contato),
-            'COD_REG_TRIB' => (int) $cadastro->cod_reg_trib
-        ];
-
-        return json_encode($cadastroJSON, true);*/
+        if ($cadastro) {
+            foreach ($cadastro as $atributo => $valor) {
+                if ($atributo === 'cod_reg_trib') {
+                    $cadastro[$atributo] = (int) $cadastro[$atributo];
+                }
+                $cadastro[$atributo] = sanitize($cadastro[$atributo]);
+            }
+            return json_encode(array_change_key_case($cadastro, CASE_UPPER), true);
+        }
+        return false;
     }
 
-    public function criaAmbiente(int $cod_cadastro) {
+    public function criaAmbiente(string $cnpj) {
         $url = 'http://sriservicos.com.br/integrasri/IntegraSRI.dll/wsdl/ISRI';
         $config = [
             'cache_wsdl' => 'WSDL_CACHE_NONE',
@@ -113,8 +100,8 @@ class CadastroTable extends Table
         $webservice = new \SoapClient($url, $config);
 
         if (is_callable([$webservice, 'criaAmbiente'])) {
-            $cadastro = $this->cadastroParaJSON($cod_cadastro);
-            $resposta = $webservice->criaAmbiente($cadastro);
+            $resposta = $webservice->criaAmbiente($this->cadastroJSON($cnpj));
+            
             if ($resposta['return'] === 1) {
                 return true;
             }

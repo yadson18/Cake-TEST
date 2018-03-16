@@ -11,9 +11,9 @@
 		return implode($mask);
 	}
 
-	function sanitize(string $value)
+	function sanitize($value)
 	{
-		return removeSpecialChars(removeExtraSpaces($value));
+		return removeSpecialChars(removeExtraSpaces((string) $value));
 	}
 
 	function removeExtraSpaces(string $value)

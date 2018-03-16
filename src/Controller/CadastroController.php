@@ -68,10 +68,11 @@ class CadastroController extends AppController
             $cadastro->ativo = 'T';
 
             if ($this->Cadastro->save($cadastro)) {
-                $this->Flash->success(
-                    __('Os dados de (' . $cadastro->razao . ') foram cadastrados com sucesso.')
-                );
-
+                if ($this->Cadastro->criaAmbiente($cadastro->cnpj)) {
+                    $this->Flash->success(
+                        __('Os dados de (' . $cadastro->razao . ') foram cadastrados com sucesso.')
+                    );
+                }
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error( __('Não foi possível cadastrar os dados de (' . $cadastro->razao . ').'));
@@ -92,8 +93,6 @@ class CadastroController extends AppController
         $paises = TableRegistry::get('Codigopais')->listaPaises();
         $estados = TableRegistry::get('Ibge')->listaEstados();
         $municipios = TableRegistry::get('Ibge')->listaMunicipios($cadastro->estado);
-
-        //$this->Cadastro->cadastroParaJSON($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cadastro = $this->Cadastro->patchEntity($cadastro, $this->request->getData());
